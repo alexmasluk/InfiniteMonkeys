@@ -16,15 +16,17 @@ class InfiniteMonkeys():
         self.radiation_level = 0.2    #controls mutation chance
         self.disaster_threshold = 0.15 #controls deadliness of disasters
         self.disaster_period = 50   #num generations before disaster
-
-        frame = Frame(master)
-        frame.pack()
+        self.output_var = StringVar()
+        self.master = master
         self.button = Button(
-                frame, text="GO", fg="red", command=self.do_genetics()
+                self.master, text="GO", fg="red", command=self.do_genetics
                 )
-        self.button.grid(row=0, column=0)
-
-        
+        self.button.pack(side=LEFT)
+        self.label = Text(
+                self.master, textvariable = self.output_var
+                )
+        self.label.pack(side=RIGHT)
+    
 
     def strcmp(self,a,b):
         score = []
@@ -140,7 +142,7 @@ class InfiniteMonkeys():
             last_avg_fitness = 0
             
             while True:
-                #assign reproductive probability to each individual
+                #assign reproductive probability to each 7individual
                 population = self.evaluate(population)
                 #generate new members
                 population = self.reproduce(population)
@@ -161,7 +163,9 @@ class InfiniteMonkeys():
                     improvement_history += 1
                 last_avg_fitness = avg_fitness
 
-                print("gen:{:06d}\n{}\nfitness:{:0.3f} | running_fit_avg:{:0.3f} | improvement_average:{:0.3f}\n".format(count, best_individual, max_fitness, avg_fitness, improvement_history / count))
+                output = "gen:{:06d}\n{}\nfitness:{:0.3f} | running_fit_avg:{:0.3f} | improvement_average:{:0.3f}\n".format(count, best_individual, max_fitness, avg_fitness, improvement_history / count)
+                self.output_var.set(output)
+                self.master.update_idletasks() 
                 count += 1
 
                 #if solution was found exit
